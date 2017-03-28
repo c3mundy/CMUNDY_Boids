@@ -1,0 +1,4 @@
+sceneSetups:
+- path: Assets/Scenes/Shoal with Predator.unity
+  isLoaded: 1
+  isActive: 1

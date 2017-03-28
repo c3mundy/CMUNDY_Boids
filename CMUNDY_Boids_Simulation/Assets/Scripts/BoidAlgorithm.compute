@@ -1,0 +1,68 @@
+﻿// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel BoidAlgorithm
+
+struct boidInfo
+    {
+        float3 velocity;
+        float3 position;
+		bool hasNMA;
+		float3 alignment;
+        float3 cohesion;
+        float3 separation;
+    };
+
+RWStructuredBuffer<boidInfo> neighbourBoids;
+RWStructuredBuffer<float3> alignment;
+RWStructuredBuffer<float3> cohesion;
+RWStructuredBuffer<float3> separation;
+
+float3 myPos;
+float3 newAlignment;
+float3 newCohesion;
+float3 newSeparation;
+
+void CalculateAlignment(int i)
+{
+	newAlignment = (0, 0, 0);
+
+	if(neighbourBoids[i].hasNMA)
+	{
+		newAlignment += neighbourBoids[i].velocity * 30;
+		newAlignment.y = 0;
+	}
+	else
+	{
+		newAlignment += neighbourBoids[i].velocity;
+	}
+
+	alignment[i] = newAlignment;
+}
+
+void CalculateCohesion(int i)
+{
+	newCohesion = (0, 0, 0);
+
+	newCohesion += neighbourBoids[i].position;	
+
+	cohesion[i] = newCohesion;
+}
+
+void CalculateSeparation(int i)
+{
+	newSeparation = (0, 0, 0);
+
+	newSeparation += neighbourBoids[i].position - myPos;
+
+	separation[i] = newSeparation;
+}
+
+[numthreads(8,8,1)]
+void BoidAlgorithm (uint3 id : SV_DispatchThreadID)
+{
+	int i = id.x;
+
+	CalculateAlignment(i);
+	CalculateCohesion(i);
+	CalculateSeparation(i);
+}
+
