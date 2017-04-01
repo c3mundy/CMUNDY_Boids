@@ -24,12 +24,6 @@ public class SceneController : MonoBehaviour
         Debug.Log(currentScene);
         HUDScript.singleton.SetDefaults();
     }
-	
-	// Update is called once per frame
-	void Update ()
-    {
-	
-	}
 
     public void LoadScene(int sceneToLoad)
     {

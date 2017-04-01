@@ -224,7 +224,7 @@ public class BoidsBehaviourScript : MonoBehaviour
         }
     }
 
-    Vector3 CalculateAlignment()
+    void CalculateAlignment()
     {
         newAlignment = Vector3.zero;
 
@@ -263,12 +263,9 @@ public class BoidsBehaviourScript : MonoBehaviour
         myAlignment = newAlignment;
         myAlignment.Normalize();
 
-        //Debug.Log("Alignment" + newAlignment);
-
-        return myAlignment;
     }
 
-    Vector3 CalculateCohesion()
+    void CalculateCohesion()
     {
         newCohesion = Vector3.zero;
 
@@ -300,11 +297,9 @@ public class BoidsBehaviourScript : MonoBehaviour
         myCohesion = newCohesion - transform.position;
         ////normalise if needed
         myCohesion.Normalize();
-
-        return myCohesion;
     }
 
-    Vector3 CalculateSeparation()
+    void CalculateSeparation()
     {
         newSeparation = Vector3.zero;
 
@@ -336,8 +331,6 @@ public class BoidsBehaviourScript : MonoBehaviour
         newSeparation *= -1;
 
         mySeparation = newSeparation;
-
-        return mySeparation;
     }
 
     void CombineAndApplyForces()
