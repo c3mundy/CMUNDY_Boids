@@ -88,7 +88,7 @@ public class LeadingBoidScript : MonoBehaviour
                 setDestination = false;
             }
 
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetKeyDown(KeyCode.Space) && !beginMoving)
             {
                 beginMoving = !beginMoving;
             }

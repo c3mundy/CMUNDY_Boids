@@ -36,6 +36,7 @@ public class BoidsBehaviourScript : MonoBehaviour
     public int totalNeighbours;
     public bool isActive;
     public bool isPredator;
+    float roamSpeed = 2.9f;
 
     public struct boidInfo
     {
@@ -56,6 +57,7 @@ public class BoidsBehaviourScript : MonoBehaviour
     [SerializeField]
     List<BoidsBehaviourScript> neighbouringBoids;
 
+    //COMPUTE SHADER VARIABLES NOW UNUSED
     List<boidInfo> neighbourInfo;
     ComputeBuffer myBuffer;
     //ComputeBuffer forceBuffer;
@@ -174,17 +176,26 @@ public class BoidsBehaviourScript : MonoBehaviour
                 //alignmentBuffer.GetData(alignmentData);
                 //cohesionBuffer.GetData(cohesionData);
                 //separationBuffer.GetData(separationData);
-                
 
-                CalculateAlignment();
-                CalculateCohesion();
-                CalculateSeparation();
-                CombineAndApplyForces();
+                if (totalNeighbours <= 3 && !isLeader)
+                {
+                    RoamBehaviour();
+                }
+                else
+                {
+                    CalculateAlignment();
+                    CalculateCohesion();
+                    CalculateSeparation();
+                    CombineAndApplyForces();
+                }            
             }
 
-            if (totalNeighbours == 0)
+            if (!isLeader)
             {
-                RoamBehaviour();
+                if (totalNeighbours == 0)
+                {
+                    RoamBehaviour();
+                }
             }
 
             if (myRB.velocity.magnitude > maxSpeed)
@@ -385,7 +396,7 @@ public class BoidsBehaviourScript : MonoBehaviour
 
     void RoamBehaviour()
     {
-        if(SceneController.singleton.currentScene == 1)
+        if(SceneController.singleton.currentScene == 1 || SceneController.singleton.currentScene == 0)
         {
             //Debug.Log(gameObject.name + " Trying to roam");
             if (setDestination)
@@ -395,23 +406,26 @@ public class BoidsBehaviourScript : MonoBehaviour
 
                 newDestination = new Vector3(newXPos, transform.position.y, newZPos);
                 setDestination = false;
-            }
-
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                beginMoving = !beginMoving;
+                beginMoving = true;
             }
 
             if (beginMoving)
             {
                 myDestination = newDestination - transform.position;
                 myDestination.Normalize();
-                myRB.velocity = maxSpeed * myDestination;
+                myRB.velocity = roamSpeed * myDestination;
 
                 if (Vector3.Distance(transform.position, newDestination) < 0.1f)
                 {
                     setDestination = true;
+                    beginMoving = false;
                 }
+            }
+
+            if (myRB.velocity.magnitude > 0.3f)
+            {
+                transform.rotation = Quaternion.Lerp(transform.rotation,
+                    Quaternion.LookRotation(myRB.velocity.normalized), 5 * Time.deltaTime);
             }
         }
     }

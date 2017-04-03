@@ -22,9 +22,9 @@ public class BoidPoolManager : MonoBehaviour
 
         for(int i = 0; i < 150; i++)
         {
-            spawnZone.x = Random.Range(347, 400);
+            spawnZone.x = Random.Range(360, 400);
             spawnZone.y = Random.Range(12, 20);
-            spawnZone.z = Random.Range(165, 200);
+            spawnZone.z = Random.Range(170, 200);
 
             GameObject newBoid = Instantiate(boidPrefab);
             newBoid.transform.position = spawnZone;
@@ -36,11 +36,6 @@ public class BoidPoolManager : MonoBehaviour
         ActivateBoids(20);
     }
 	
-	// Update is called once per frame
-	void Update ()
-    {
-	    
-	}
 
     public void ActivateBoids(int numBoids)
     {
