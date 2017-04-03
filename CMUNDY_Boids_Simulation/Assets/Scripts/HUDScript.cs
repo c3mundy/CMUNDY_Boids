@@ -177,6 +177,7 @@ public class HUDScript : MonoBehaviour
                 camSpeedSlider.gameObject.SetActive(false);
                 boidTotalSlider.gameObject.SetActive(false);
                 boidTotalTxt.enabled = false;
+                toggleCamView.enabled = false;
                 break;
         }
     }
