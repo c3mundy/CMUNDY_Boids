@@ -52,6 +52,7 @@ public class HUDScript : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
+        //lerps the HUD to open and close
 	    if(openHUD)
         {
             dropDown.transform.localPosition = Vector3.Lerp(dropDown.transform.localPosition, openPos, Time.deltaTime * 19.2f);

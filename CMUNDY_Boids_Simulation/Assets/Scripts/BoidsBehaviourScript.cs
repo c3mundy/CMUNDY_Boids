@@ -132,6 +132,8 @@ public class BoidsBehaviourScript : MonoBehaviour
 	// Update is called once per frame
 	void FixedUpdate ()
     {
+        //UNUSED IMPLEMENTATION FOR THE COMPUTE SHADER
+
         //if (!myInfo.hasNMA)
         //{
         //    myInfo.velocity = myRB.velocity;
@@ -154,6 +156,21 @@ public class BoidsBehaviourScript : MonoBehaviour
         {
             if (neighbouringBoids.Count > 0)
             {
+                if (totalNeighbours <= 3 && !isLeader)
+                {
+                    RoamBehaviour();
+                }
+                else
+                {
+                    //This is where the algorithm is calculated and applied to the boids
+                    CalculateAlignment();
+                    CalculateCohesion();
+                    CalculateSeparation();
+                    CombineAndApplyForces();
+                }
+
+                //UNUSED IMPLEMENTATION FOR THE COMPUTE SHADER
+
                 //set up the info list so that it has updated info
                 //neighbourInfo.Clear();
 
@@ -175,19 +192,7 @@ public class BoidsBehaviourScript : MonoBehaviour
 
                 //alignmentBuffer.GetData(alignmentData);
                 //cohesionBuffer.GetData(cohesionData);
-                //separationBuffer.GetData(separationData);
-
-                if (totalNeighbours <= 3 && !isLeader)
-                {
-                    RoamBehaviour();
-                }
-                else
-                {
-                    CalculateAlignment();
-                    CalculateCohesion();
-                    CalculateSeparation();
-                    CombineAndApplyForces();
-                }            
+                //separationBuffer.GetData(separationData);    
             }
 
             if (!isLeader)
@@ -200,6 +205,7 @@ public class BoidsBehaviourScript : MonoBehaviour
 
             if (myRB.velocity.magnitude > maxSpeed)
             {
+                //cap speed
                 myRB.velocity.Normalize();
                 myRB.velocity *= maxSpeed;
             }
@@ -214,6 +220,7 @@ public class BoidsBehaviourScript : MonoBehaviour
 
     IEnumerator CollisionAvoidance()
     {
+        //performs collision avoidance for the boids that aren't in the air scene
         while (isActive && SceneController.singleton.currentScene != 1)
         {
             RaycastHit hit;
@@ -261,6 +268,8 @@ public class BoidsBehaviourScript : MonoBehaviour
             }              
         }
 
+        //UNUSED COMPUTE SHADER CODE
+
         //for(int i = 0; i < groupAlignment.Length; i++)
         //{
         //    newAlignment += groupAlignment[i];
@@ -296,6 +305,8 @@ public class BoidsBehaviourScript : MonoBehaviour
 
         }
 
+        //UNUSED COMPUTE SHADER CODE
+
         //for (int i = 0; i < groupCohesion.Length; i++)
         //{
         //    newCohesion += groupCohesion[i];
@@ -327,6 +338,8 @@ public class BoidsBehaviourScript : MonoBehaviour
             }
         }
 
+        //UNUSED COMPUTE SHADER CODE
+
         //for (int i = 0; i < groupSeparation.Length; i++)
         //{
         //    newSeparation += groupSeparation[i];
@@ -348,6 +361,7 @@ public class BoidsBehaviourScript : MonoBehaviour
     {
         if (!isLeader)
         {
+            //apply weights to forces
             myAlignment *= alignmentWeighting;
             myCohesion *= cohesionWeighting;
             mySeparation *= separationWeighting * 0.6f;
@@ -358,6 +372,7 @@ public class BoidsBehaviourScript : MonoBehaviour
 
         if (appliedForce.magnitude >= maxForce)
         {
+            //cap force
             appliedForce = appliedForce.normalized;
             appliedForce *= maxForce;
         }
@@ -369,6 +384,7 @@ public class BoidsBehaviourScript : MonoBehaviour
 
         if (myRB.velocity.magnitude > 0.3f)
         {
+            //make boids rotate to face the direction they're travelling in
             transform.rotation = Quaternion.Lerp(transform.rotation,
                 Quaternion.LookRotation(myRB.velocity.normalized), 5 * Time.deltaTime);
         }
@@ -376,6 +392,7 @@ public class BoidsBehaviourScript : MonoBehaviour
 
     void OnTriggerEnter(Collider newNeighbour)
     {
+        //add neighbours to list
         if(newNeighbour.gameObject.CompareTag("Boid") && !newNeighbour.isTrigger)
         {
             neighbouringBoids.Add(newNeighbour.gameObject.GetComponent<BoidsBehaviourScript>());
@@ -386,6 +403,7 @@ public class BoidsBehaviourScript : MonoBehaviour
 
     void OnTriggerExit(Collider removableNeighbour)
     {
+        //remove neighbours from list
         if(removableNeighbour.gameObject.CompareTag("Boid") && !removableNeighbour.isTrigger)
         {
             neighbouringBoids.Remove(removableNeighbour.gameObject.GetComponent<BoidsBehaviourScript>());
@@ -396,6 +414,7 @@ public class BoidsBehaviourScript : MonoBehaviour
 
     void RoamBehaviour()
     {
+        //make the birds roam in single point flocking and in-air sims
         if(SceneController.singleton.currentScene == 1 || SceneController.singleton.currentScene == 0)
         {
             //Debug.Log(gameObject.name + " Trying to roam");
@@ -424,6 +443,7 @@ public class BoidsBehaviourScript : MonoBehaviour
 
             if (myRB.velocity.magnitude > 0.3f)
             {
+                //rotate to face direction of travel
                 transform.rotation = Quaternion.Lerp(transform.rotation,
                     Quaternion.LookRotation(myRB.velocity.normalized), 5 * Time.deltaTime);
             }

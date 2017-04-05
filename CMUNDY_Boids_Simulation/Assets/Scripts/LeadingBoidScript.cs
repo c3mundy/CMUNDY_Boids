@@ -44,18 +44,14 @@ public class LeadingBoidScript : MonoBehaviour
         {
             FishShoalBehaviour();
         }
-
-        //if (rb.velocity.magnitude > maxSpeed)
-        //{
-        //    rb.velocity.Normalize();
-        //    rb.velocity *= maxSpeed;
-        //}
     }
 
     void FloorFlockBehaviour()
     {
         if (Input.GetMouseButtonDown(0))
         {
+            //if the mouse click hits an object tagged as the floor place a seed
+
             RaycastHit hit;
 
             if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 500))
@@ -65,6 +61,7 @@ public class LeadingBoidScript : MonoBehaviour
 
                     Destroy(myGoal);
 
+                    //set destination for leader to travel to via NavMesh Agent - it moves there automatically
                     leader.destination = hit.point;
                     myGoal = GameObject.Instantiate(goalPrefab, hit.point, transform.rotation) as GameObject;
                     Debug.Log(hit.transform.tag);
@@ -80,6 +77,7 @@ public class LeadingBoidScript : MonoBehaviour
     {
             if (setDestination)
             {
+            //set the destination manually choosing random values
                 float newXPos = Random.Range(85.7f, 416);
                 //float newYPos = Random.Range(4.4f, 47.4f);
                 float newZPos = Random.Range(98.8f, 411.8f);
@@ -95,6 +93,7 @@ public class LeadingBoidScript : MonoBehaviour
 
         if (beginMoving)
         {
+            //move to that destination
             myDirection = newDestination - transform.position;
             myDirection.Normalize();
             rb.velocity = mySpeed * myDirection;
@@ -110,6 +109,7 @@ public class LeadingBoidScript : MonoBehaviour
     {
         if (setFishDest)
         {
+            //set destination manually by choosing random values
             float newXPos = Random.Range(89.2f, 415.9f);
             //float newYPos = Random.Range(4.4f, 47.4f);
             float newZPos = Random.Range(72f, 418f);
@@ -125,6 +125,7 @@ public class LeadingBoidScript : MonoBehaviour
 
         if (fishMove)
         {
+            //move to that destination
             myDirection = newDestination - transform.position;
             myDirection.Normalize();
             rb.velocity = mySpeed * myDirection;

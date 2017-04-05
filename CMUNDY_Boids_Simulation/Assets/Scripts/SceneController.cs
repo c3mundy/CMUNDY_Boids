@@ -11,7 +11,9 @@ public class SceneController : MonoBehaviour
     void Awake()
     {
         if (singleton)
+        {
             Destroy(gameObject);
+        }
 
         currentScene = SceneManager.GetActiveScene().buildIndex;
         singleton = this;

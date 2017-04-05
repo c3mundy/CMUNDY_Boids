@@ -111,6 +111,7 @@ public class CameraScript : MonoBehaviour
 
     public void ChangeView(bool moveForwards)
     {
+        //change to the next available camera positions
         if (moveForwards)
         {
             currentPosition++;

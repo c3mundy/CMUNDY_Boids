@@ -20,7 +20,9 @@ public class BoidPoolManager : MonoBehaviour
     {
 	    boidScripts = new List<BoidsBehaviourScript>();
 
-        for(int i = 0; i < 150; i++)
+        //fill the pool of boids
+
+        for(int i = 0; i < 80; i++)
         {
             spawnZone.x = Random.Range(360, 400);
             spawnZone.y = Random.Range(12, 20);
@@ -39,6 +41,7 @@ public class BoidPoolManager : MonoBehaviour
 
     public void ActivateBoids(int numBoids)
     {
+        //controls which boids are active in the scene
         for(int i = 0; i < boidScripts.Count; i++)
         {
             if(i < numBoids)
